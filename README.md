@@ -72,24 +72,6 @@ The bridge software connects Spotify playback data to the keyboard firmware thro
 
 ---
 
-
-## Repository Layout
-
-```text
-macropad/
-├─ CIRCUITPY/
-│  ├─ code.py
-│  ├─ display_manager.py
-│  ├─ cat_animation.py
-│  └─ rgb_manager.py
-└─ bridge/
-   ├─ spotify_bridge.py
-   ├─ oled_test_app.py
-   ├─ build_exe.py
-   ├─ config.json
-   └─ requirements.txt
-```
-
 ## Firmware
 
 Firmware is written using **KMK (Keyboard Module Kit)**.
@@ -173,16 +155,12 @@ Examples:
 
 ```text
 SONG|title|artist|position|duration|tempo
-COVER|<32x32_mono_hex>
+VOL|70
 IDLE
-CMD|PLAY_PAUSE
+COVER|bitmap_data
 CMD|NEXT
-CMD|PREV
-CMD|SHUFFLE
-CMD|REPEAT
-CMD|MUTE
-CMD|VOL_REL|2
-CMD|SEEK_REL|5
+CMD|PLAY
+CMD|SEEK|120
 ```
 
 This protocol allows **two-way communication**.
@@ -366,60 +344,3 @@ Current stage:
 - Software architecture completed
 - Firmware and bridge logic implemented
 - Waiting for hardware components to assemble the physical macropad
-
-
-## Bridge Setup
-
-Install dependencies and run the bridge from `macropad/bridge`:
-
-```bash
-pip install -r requirements.txt
-python spotify_bridge.py
-```
-
-The bridge now also:
-- converts album art to 32×32 monochrome for OLED (`COVER|...`)
-- sends BPM for beat-synced animation
-- receives control commands from firmware and executes Spotify Web API actions
-
-## Build Windows EXE Apps
-
-From `macropad/bridge`:
-
-```bash
-pip install -r requirements.txt
-python build_exe.py
-```
-
-Output files:
-
-```text
-macropad/bridge/dist/spotify_bridge.exe
-macropad/bridge/dist/oled_test_app.exe
-```
-
----
-
-## OLED Test App
-
-`oled_test_app.py` is a desktop OLED simulator for validating UI and protocol behavior before hardware arrives.
-
-Run in demo mode:
-
-```bash
-python oled_test_app.py --demo
-```
-
-Run against a serial device/bridge stream:
-
-```bash
-python oled_test_app.py --port COM7 --baud 115200
-```
-
-Supported protocol messages:
-
-```text
-SONG|title|artist|position|duration|tempo
-COVER|<32x32_mono_hex>
-IDLE
-```
